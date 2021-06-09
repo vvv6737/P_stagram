@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "182580405371",
+    "project_id": "p-stagram-c1c41",
+    "storage_bucket": "p-stagram-c1c41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182580405371:android:22c2f26099d3b954acaede",
+        "android_client_info": {
+          "package_name": "com.SNS.p_stagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182580405371-icug1965ca04hnpr4vhcf26akrok16hh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVTuLCAvV5msxxhqmAUWVPKCHXV5cPCtA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182580405371-icug1965ca04hnpr4vhcf26akrok16hh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
