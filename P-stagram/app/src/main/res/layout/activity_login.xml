@@ -40,6 +40,7 @@
                 android:layout_marginRight="20dp">
 
             <EditText
+                    android:inputType="textPassword"
                     android:id="@+id/password_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,7 +68,8 @@
                 android:layout_marginBottom="5dp" />
 
         <Button
-                android:text="@string/signin_facebook"
+                android:id="@+id/google_sign_in_button"
+                android:text="@string/signin_google"
                 android:textColor="@color/colorWhite"
                 android:background="@drawable/btn_signin_google"
                 android:layout_width="match_parent"
