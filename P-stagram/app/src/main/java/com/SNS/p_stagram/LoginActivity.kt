@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : AppCompatActivity() {
 
     var auth: FirebaseAuth? = null
-    var googleSignInClient :  GoogleSignInClient? = null
+    var googleSignInClient: GoogleSignInClient? = null
     var GOOGLE_LOGIN_CODE = 9001
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,21 +32,22 @@ class LoginActivity : AppCompatActivity() {
             googleLogin()
         }
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken("182580405371-icug1965ca04hnpr4vhcf26akrok16hh.apps.googleusercontent.com")
             .requestEmail()
             .build() //빌드로 닫아준다.
-        googleSignInClient = GoogleSignIn.getClient(this,gso)
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
-    fun googleLogin(){
+
+    fun googleLogin() {
         var signInIntent = googleSignInClient?.signInIntent
-        startActivityForResult(signInIntent,GOOGLE_LOGIN_CODE)
+        startActivityForResult(signInIntent, GOOGLE_LOGIN_CODE)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GOOGLE_LOGIN_CODE) {
             var result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
-            if (result?.isSuccess == true) {
+            if (result!!.isSuccess) {
                 var account = result.signInAccount
                 //second step
                 //어카운트 파라미터를 넘긴다
@@ -55,8 +56,8 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun firebaseAuthWithGoogle(account : GoogleSignInAccount?) {
-        var credential = GoogleAuthProvider.getCredential(account?.idToken,null)
+    fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
+        var credential = GoogleAuthProvider.getCredential(account?.idToken, null)
         auth?.signInWithCredential(credential)
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -64,10 +65,11 @@ class LoginActivity : AppCompatActivity() {
                     moveMainPage(task.result?.user)
                 } else {
                     //틀렸을 경우
-                    Toast.makeText(this, task.exception?.message,Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
                 }
             }
     }
+
     //아이디를 만드는 코드
     fun signinAndSignup() {
         auth?.createUserWithEmailAndPassword(
@@ -80,7 +82,7 @@ class LoginActivity : AppCompatActivity() {
                     moveMainPage(task.result?.user)
                 } else if (task.exception?.message.isNullOrEmpty()) {
                     //로그인 에러가 났을경우, 에러메시지
-                    Toast.makeText(this, task.exception?.message,Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
                 } else {
                     //회원가입도 아니고, 에러메시지도 아닐시, 로그인 화면으로 이동
                     signinEmail()
@@ -100,15 +102,15 @@ class LoginActivity : AppCompatActivity() {
                     moveMainPage(task.result?.user)
                 } else {
                     //틀렸을 경우
-                    Toast.makeText(this, task.exception?.message,Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
                 }
             }
     }
 
     //로그인 성공시 메인으로 이동하는 코드
-    fun moveMainPage(user:FirebaseUser?){
+    fun moveMainPage(user: FirebaseUser?) {
         if (user != null) {
-            startActivity(Intent(this,MainActivity::class.java))
+            startActivity(Intent(this, MainActivity::class.java))
         }
     }
 }
