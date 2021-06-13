@@ -9,8 +9,13 @@ import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
+import bolts.Task
 import com.SNS.p_stagram.R
+import com.SNS.p_stagram.navigation.model.ContentDTO
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_add_photo.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,6 +24,8 @@ class AddPhotoActivity : AppCompatActivity() {
     var PICK_IMAGE_FROM_ALBUM = 0
     var storage: FirebaseStorage? = null
     var photoUri: Uri? = null
+    var auth : FirebaseAuth? = null
+    var firestore : FirebaseFirestore? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +33,8 @@ class AddPhotoActivity : AppCompatActivity() {
 
         //initiate storage - 스토리지 초기화
         storage = FirebaseStorage.getInstance()
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         //Open the album - 액티비티를 실행하자마자 화면을 오픈해주는 코드
         var photoPickerIntent= Intent(Intent.ACTION_PICK)
@@ -59,10 +68,66 @@ class AddPhotoActivity : AppCompatActivity() {
 
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
 
-        //사진 업로드
+        //사진 업로드 , 데이터 베이스 입력
         storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
             //결과 성공시 메시지
-            Toast.makeText(this,getString(R.string.upload_success),Toast.LENGTH_LONG).show()
+            //Toast.makeText(this,getString(R.string.upload_success),Toast.LENGTH_LONG).show()
+
+            //promise method - 프로미스방식 (구글에서는 프로미스방식을 권장한다.)
+            storageRef?.putFile(photoUri!!)?.continueWithTask { task:Task<UploadTask.TaskSnapshot>->
+                return@continueWithTask storageRef.downloadUrl
+            }?.addonSuccessListener { uri ->
+                var contentDTO = ContentDTO()
+
+                //insert downloadUrl of image
+                contentDTO.imageUrl = uri.toString()
+
+                //insert uid of user
+                contentDTO.uid = auth?.currentUser?.uid
+
+                //insert userId
+                contentDTO.userId = auth?.currentUser?.email
+
+                //insert explain of content - 사용자가 입력한 설명그
+                contentDTO.explain = addphoto_edit_explain.text.toString()
+
+                //insert timestamp
+                contentDTO.timestamp = System.currentTimeMillis()
+
+                firestore?.collection("images")?.document().set(contentDTO)
+
+                setResult(Activity.RESULT_OK)
+                //업로드 완료시 피니시로 창을 닫는다.
+                finish()
+            }
+
+            //Callback method - 콜백방식
+            /*storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
+                storageRef?.putFile(photoUri!!)?.addOnSuccessListener { uri ->
+                    var contentDTO = ContentDTO()
+
+                    //insert downloadUrl of image
+                    contentDTO.imageUrl = uri.toString()
+
+                    //insert uid of user
+                    contentDTO.uid = auth?.currentUser?.uid
+
+                    //insert userId
+                    contentDTO.userId = auth?.currentUser?.email
+
+                    //insert explain of content - 사용자가 입력한 설명그
+                    contentDTO.explain = addphoto_edit_explain.text.toString()
+
+                    //insert timestamp
+                    contentDTO.timestamp = System.currentTimeMillis()
+
+                    firestore?.collection("images")?.document().set(contentDTO)
+
+                    setResult(Activity.RESULT_OK)
+                    //업로드 완료시 피니시로 창을 닫는다.
+                    finish()
+                }
+            }*/
         }
     }
 }
