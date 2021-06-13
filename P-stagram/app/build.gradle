@@ -8,13 +8,19 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
+
     defaultConfig {
         applicationId "com.SNS.p_stagram"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+
+        //Dex에러 때문에 추가
+        multiDexEnabled true
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
@@ -45,4 +51,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    //Dex에러 때문에 추가
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
