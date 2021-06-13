@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 //사진 경로를 가져올수있는 권한을 요청.
                 //외부 스토리지 경로를 가져올 수 있는 권한이 있는지 체크
                 //권한이 있을경우,
-                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED ){
+                if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
                     startActivity(Intent(this,AddPhotoActivity::class.java))
                 }
                 return true

@@ -38,6 +38,7 @@ class AddPhotoActivity : AppCompatActivity() {
         }
     }
 
+    //선택한 이미지를 받는 부분
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
          if (requestCode == PICK_IMAGE_FROM_ALBUM ) {
@@ -61,7 +62,7 @@ class AddPhotoActivity : AppCompatActivity() {
         //사진 업로드
         storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
             //결과 성공시 메시지
-            Toast.makeText(this, getString(R.string.upload_success),Toast.LENGTH_LONG).show()
+            Toast.makeText(this,getString(R.string.upload_success),Toast.LENGTH_LONG).show()
         }
     }
 }

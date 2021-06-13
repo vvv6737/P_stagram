@@ -19,7 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".MainActivity"></activity>
+
+        <!--사진 업로드-->
+        <activity android:name=".navigation.AddPhotoActivity"></activity>
 
         <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
