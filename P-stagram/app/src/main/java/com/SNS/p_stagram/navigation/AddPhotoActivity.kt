@@ -5,8 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.multidex.MultiDex
 import com.SNS.p_stagram.R
 import com.SNS.p_stagram.navigation.model.ContentDTO
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -25,6 +27,7 @@ class AddPhotoActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_photo)
+        MultiDex.install(this)
 
         //initiate storage - 스토리지 초기화
         storage = FirebaseStorage.getInstance()
@@ -65,10 +68,9 @@ class AddPhotoActivity : AppCompatActivity() {
         var storageRef = storage?.reference?.child("images")?.child(imageFileName)
 
         //promise method - 프로미스방식 (구글에서는 프로미스방식을 권장한다.)
-        storageRef?.putFile(photoUri!!)
-            ?.continueWithTask { task: com.google.android.gms.tasks.Task<UploadTask.TaskSnapshot> ->
-                return@continueWithTask storageRef.downloadUrl
-            }?.addOnSuccessListener { uri ->
+        storageRef?.putFile(photoUri!!)?.continueWithTask { task: Task<UploadTask.TaskSnapshot> ->
+            return@continueWithTask storageRef.downloadUrl
+        }?.addOnSuccessListener { uri ->
             var contentDTO = ContentDTO()
 
             //insert downloadUrl of image
